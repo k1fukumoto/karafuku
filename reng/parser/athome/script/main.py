@@ -1,19 +1,12 @@
 from bs4 import BeautifulSoup
-import re
+import sys
 
-# import requests
-# r = requests.get("http://www.athome.co.jp/tochi/tokyo/list/page")
-#              headers={'User-Agent': user_agent})
+# with open('athome.html','rb') as fd:
+soup = BeautifulSoup(sys.stdin.buffer.read(),"lxml")
 
-import sys,codecs
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
-
-with codecs.open('athome.html','r','utf-8') as f:
-    soup = BeautifulSoup(f.read(),"lxml")
-
+cnt = 0
 for p in soup.find_all('div',attrs={'data-bukken-no':True}):
     cols = [p['data-bukken-no']]
-    cnt = 0
     try:
         for location in p.find('li',attrs={'class':'info-trans'}).find_all('span'):
             cols.append(' '.join(location.text.strip().split()))
@@ -23,7 +16,9 @@ for p in soup.find_all('div',attrs={'data-bukken-no':True}):
         for ratio in p.find('li',attrs={'class':'info-percent'}).find_all('span'):
             cols.append(ratio.text)
     except:
-        print "PARSE ERROR:" + str(cnt)
+        print("PARSE ERROR AT LINE " + str(cnt))
 
-    cnt += 1
-    print ','.join(cols)
+    cnt = cnt + 1
+    s = u','.join(cols) + u'\n'
+    sys.stdout.buffer.write(bytes(s,'utf-8'))
+
