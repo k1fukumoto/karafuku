@@ -1,3 +1,5 @@
+#!/usr/bin/env python34
+
 from bs4 import BeautifulSoup
 import sys
 import re
@@ -55,7 +57,7 @@ for p in soup.find_all('div',attrs={'data-bukken-no':True}):
         cols.append("https://www.athome.co.jp/tochi/{}".format(cols[0]))
         
     except Exception as e:
-        print("PARSE ERROR AT LINE " + str(e))
+        print("parser_landlist.py: PARSE ERROR AT LINE {}".format(cnt) + str(e))
 
     cols = map(lambda x: '"{}"'.format(x), cols)
 
